@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
@@ -175,8 +177,8 @@ ColumnLayout {
                 id: stringNote
 
                 required property var modelData
-                readonly property bool current: tuner.hasSignal && tuner.midiNote === modelData.midi
-                readonly property bool inTune: current && Math.abs(tuner.cents) <= 5
+                readonly property bool current: tuner.hasSignal && tuner.midiNote === stringNote.modelData.midi
+                readonly property bool inTune: stringNote.current && Math.abs(tuner.cents) <= 5
 
                 implicitWidth: Math.max(implicitHeight, noteLabel.implicitWidth + Kirigami.Units.largeSpacing * 2)
                 implicitHeight: noteLabel.implicitHeight + Kirigami.Units.smallSpacing * 2

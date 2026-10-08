@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Shapes
 import org.kde.kirigami as Kirigami
@@ -32,6 +34,8 @@ Item {
 
     // Arc for a cents range; angles in Shapes start at 3 o'clock, clockwise.
     component Band: ShapePath {
+        id: band
+
         property real from
         property real to
         property real arcRadius: gauge.radius - gauge.thickness / 2
@@ -43,10 +47,10 @@ Item {
         PathAngleArc {
             centerX: gauge.centreX
             centerY: gauge.centreY
-            radiusX: arcRadius
-            radiusY: arcRadius
-            startAngle: -90 + gauge.angle(from)
-            sweepAngle: gauge.angle(to) - gauge.angle(from)
+            radiusX: band.arcRadius
+            radiusY: band.arcRadius
+            startAngle: -90 + gauge.angle(band.from)
+            sweepAngle: gauge.angle(band.to) - gauge.angle(band.from)
         }
     }
 
@@ -76,20 +80,22 @@ Item {
         model: 21
 
         Item {
+            id: tick
+
             required property int index
             readonly property bool major: index % 2 === 0
 
             x: gauge.centreX
             y: gauge.centreY
-            rotation: gauge.angle(index * 5 - 50)
+            rotation: gauge.angle(tick.index * 5 - 50)
 
             Rectangle {
                 x: -width / 2
                 y: -gauge.radius + gauge.thickness * 1.5
-                width: parent.major ? 2 : 1
-                height: gauge.radius * (parent.major ? 0.1 : 0.05)
+                width: tick.major ? 2 : 1
+                height: gauge.radius * (tick.major ? 0.1 : 0.05)
                 color: Kirigami.Theme.textColor
-                opacity: parent.major ? 0.8 : 0.5
+                opacity: tick.major ? 0.8 : 0.5
             }
         }
     }

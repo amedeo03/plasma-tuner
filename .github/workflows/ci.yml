@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint, build and test
+    runs-on: ubuntu-latest
+    # GitHub's Ubuntu images lack Qt >= 6.7 and Plasma 6: build on Arch instead.
+    container: archlinux:latest
+    steps:
+      - name: Install dependencies
+        run: >
+          pacman -Syu --noconfirm --needed
+          git cmake make gcc extra-cmake-modules
+          qt6-base qt6-declarative qt6-multimedia
+          ki18n kconfig libplasma
+          clang appstream
+
+      - uses: actions/checkout@v5
+
+      # Also generates the KDE .clang-format used by the format check.
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+
+      - name: Check C++ formatting
+        run: git ls-files '*.cpp' '*.h' | xargs clang-format --dry-run --Werror
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Lint QML
+        run: cmake --build build --target all_qmllint
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+        env:
+          QT_QPA_PLATFORM: offscreen

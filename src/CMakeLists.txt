@@ -11,7 +11,8 @@ qt_add_resources(tunercore "tunercore_defaults"
     BASE core
     FILES core/defaultinstruments.json
 )
-set_target_properties(tunercore PROPERTIES POSITION_INDEPENDENT_CODE ON)
+# No QObjects here: skip moc, whose missing output directory would trip -Wmissing-include-dirs.
+set_target_properties(tunercore PROPERTIES POSITION_INDEPENDENT_CODE ON AUTOMOC OFF)
 target_include_directories(tunercore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(tunercore PUBLIC
     Qt6::Core

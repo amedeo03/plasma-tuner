@@ -52,6 +52,20 @@ Prefer log-based checks over screenshots: the user may be using the desktop, and
 To test with a real signal without touching the user's audio devices, create a virtual source, play a generated WAV into it, select it as the input, then unload the modules:
 `pactl load-module module-null-sink sink_name=tunertest` followed by `pactl load-module module-remap-source master=tunertest.monitor source_name=tunertest_src`, then `paplay -d tunertest tone.wav`. The Qt device id is the PulseAudio source name.
 
+## Linting & CI
+
+```sh
+cmake --build build --target clang-format                                   # format C++ in place (KDE style)
+git ls-files '*.cpp' '*.h' | xargs clang-format --dry-run --Werror          # format check, as in CI
+cmake --build build --target all_qmllint                                    # QML lint; fails on any warning
+```
+
+- `.github/workflows/ci.yml` runs on pushes and pull requests to `main`. It uses an `archlinux:latest` container, because GitHub's Ubuntu images lack Qt ≥ 6.7 and Plasma 6. Steps: configure with `-DCMAKE_COMPILE_WARNING_AS_ERROR=ON`, clang-format check, build, qmllint, then `ctest` with `QT_QPA_PLATFORM=offscreen`.
+- To reproduce CI locally, run those steps in `docker run archlinux:latest` (copy the repo in, don't build in the mounted source tree).
+- `.clang-format` is generated from ECM's KDE style by `kde_clang_format()` at configure time, and is gitignored. Configure before running the format check.
+- qmllint settings: `.qmllint.ini` sets `MaxWarnings=0`, because the Qt-generated lint targets otherwise exit 0 on warnings. `.contextProperties.ini` declares Plasma's injected `i18n*()` functions, which qmllint can't see. Don't switch to the `KI18n` singleton to silence those warnings: it wouldn't use the applet's translation domain, since plasmashell shares one QML engine across applets.
+- QML files use `pragma ComponentBehavior: Bound`. Delegates and inline components must reach outer objects through ids, and their own properties through their own id.
+
 ## Architecture
 
 The data flow runs from the audio thread to the main thread and then to QML:

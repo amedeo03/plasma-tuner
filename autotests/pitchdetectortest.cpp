@@ -1,5 +1,5 @@
-#include "core/notes.h"
 #include "core/pitchdetector.h"
+#include "core/notes.h"
 
 #include <QTest>
 

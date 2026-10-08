@@ -118,10 +118,8 @@ InstrumentConfig::Instrument parseInstrument(const QJsonValue &value, int index)
     const QJsonValue countValue = object.value(u"stringCount");
     const double count = countValue.toDouble(-1.0);
     if (!countValue.isDouble() || count != std::floor(count) || count < 1 || count > InstrumentConfig::maximumStrings) {
-        instrument.error = i18nc("@info",
-                                 "\"stringCount\" must be a whole number from 1 to %1, found %2.",
-                                 InstrumentConfig::maximumStrings,
-                                 describe(countValue));
+        instrument.error =
+            i18nc("@info", "\"stringCount\" must be a whole number from 1 to %1, found %2.", InstrumentConfig::maximumStrings, describe(countValue));
         return instrument;
     }
     instrument.stringCount = static_cast<int>(count);

@@ -186,11 +186,12 @@ private Q_SLOTS:
 
     void testBrokenTuningKeepsInstrumentValid()
     {
-        const Config config = parseInstrument(json("{'name': 'Bass', 'stringCount': 1, 'tunings': ["
-            "{'name': 'Good', 'stringNotes': ['E1']},"
-            "{'name': 'Bad', 'stringNotes': ['X1']},"
-            "{'stringNotes': ['E1']}"
-        "]}"));
+        const Config config =
+            parseInstrument(json("{'name': 'Bass', 'stringCount': 1, 'tunings': ["
+                                 "{'name': 'Good', 'stringNotes': ['E1']},"
+                                 "{'name': 'Bad', 'stringNotes': ['X1']},"
+                                 "{'stringNotes': ['E1']}"
+                                 "]}"));
         const Instrument &instrument = config.instruments.first();
         QVERIFY(instrument.isValid());
         QCOMPARE(instrument.tunings.size(), 3);
@@ -202,10 +203,11 @@ private Q_SLOTS:
 
     void testBrokenInstrumentKeepsOthers()
     {
-        const Config config = parse(json("{'instruments': ["
-            "{'name': 'Good', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]},"
-            "{'name': 'Bad', 'stringCount': -3, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]}"
-        "]}"));
+        const Config config =
+            parse(json("{'instruments': ["
+                       "{'name': 'Good', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]},"
+                       "{'name': 'Bad', 'stringCount': -3, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]}"
+                       "]}"));
         QCOMPARE(config.instruments.size(), 2);
         QVERIFY(config.instruments.at(0).isValid());
         QVERIFY(!config.instruments.at(1).isValid());
@@ -213,15 +215,16 @@ private Q_SLOTS:
 
     void testDuplicateNames()
     {
-        const Config config = parse(json("{'instruments': ["
-            "{'name': 'Guitar', 'stringCount': 1, 'tunings': ["
-                "{'name': 'Low', 'stringNotes': ['E2']},"
-                "{'name': 'Low', 'stringNotes': ['D2']},"
-                "{'name': 'High', 'stringNotes': ['E4']}"
-            "]},"
-            "{'name': 'Guitar', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E2']}]},"
-            "{'name': 'Bass', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]}"
-        "]}"));
+        const Config config =
+            parse(json("{'instruments': ["
+                       "{'name': 'Guitar', 'stringCount': 1, 'tunings': ["
+                       "{'name': 'Low', 'stringNotes': ['E2']},"
+                       "{'name': 'Low', 'stringNotes': ['D2']},"
+                       "{'name': 'High', 'stringNotes': ['E4']}"
+                       "]},"
+                       "{'name': 'Guitar', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E2']}]},"
+                       "{'name': 'Bass', 'stringCount': 1, 'tunings': [{'name': 'T', 'stringNotes': ['E1']}]}"
+                       "]}"));
         QCOMPARE(config.instruments.size(), 3);
         QVERIFY(config.instruments.at(0).error.contains(QStringLiteral("also named \"Guitar\"")));
         QVERIFY(!config.instruments.at(1).isValid());
