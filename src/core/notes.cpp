@@ -1,5 +1,7 @@
 #include "notes.h"
 
+#include <QRegularExpression>
+
 #include <cmath>
 
 namespace Notes
@@ -30,5 +32,33 @@ int octave(int midi)
 QString fullName(int midi)
 {
     return name(midi) + QString::number(octave(midi));
+}
+
+std::optional<ParsedNote> parse(const QString &text)
+{
+    static const QRegularExpression pattern(QStringLiteral("^([A-G])([#b]?)(\\d{1,2})$"));
+    const QRegularExpressionMatch match = pattern.match(text);
+    if (!match.hasMatch()) {
+        return std::nullopt;
+    }
+    // Semitones from C for A-G.
+    static const int letterOffsets[] = {9, 11, 0, 2, 4, 5, 7};
+    const QChar letter = match.captured(1).front();
+    const QString accidental = match.captured(2);
+    const int octave = match.captured(3).toInt();
+
+    int midi = (octave + 1) * 12 + letterOffsets[letter.unicode() - u'A'];
+    QString label = letter;
+    if (accidental == u'#') {
+        ++midi;
+        label += u'♯';
+    } else if (accidental == u'b') {
+        --midi;
+        label += u'♭';
+    }
+    if (midi < lowestNote || midi > highestNote) {
+        return std::nullopt;
+    }
+    return ParsedNote{midi, label + QString::number(octave)};
 }
 }

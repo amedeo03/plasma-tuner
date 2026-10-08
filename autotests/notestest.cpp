@@ -50,6 +50,48 @@ private Q_SLOTS:
         QFETCH(QString, fullName);
         QCOMPARE(Notes::fullName(midi), fullName);
     }
+
+    void testParse_data()
+    {
+        QTest::addColumn<QString>("text");
+        QTest::addColumn<int>("midi"); // -1 when invalid
+        QTest::addColumn<QString>("label");
+
+        QTest::newRow("E2") << "E2" << 40 << "E2";
+        QTest::newRow("sharp") << "F#1" << 30 << "F♯1";
+        QTest::newRow("flat") << "Bb0" << 22 << "B♭0";
+        QTest::newRow("B#3 is C4") << "B#3" << 60 << "B♯3";
+        QTest::newRow("Cb4 is B3") << "Cb4" << 59 << "C♭4";
+        QTest::newRow("lowest C0") << "C0" << 12 << "C0";
+        QTest::newRow("highest C8") << "C8" << 108 << "C8";
+        QTest::newRow("below C0") << "Cb0" << -1 << "";
+        QTest::newRow("above C8") << "C#8" << -1 << "";
+        QTest::newRow("octave 9") << "E9" << -1 << "";
+        QTest::newRow("bad letter") << "Z9" << -1 << "";
+        QTest::newRow("H") << "H2" << -1 << "";
+        QTest::newRow("no octave") << "E" << -1 << "";
+        QTest::newRow("lowercase") << "e2" << -1 << "";
+        QTest::newRow("unicode sharp") << "F♯1" << -1 << "";
+        QTest::newRow("unicode flat") << "B♭0" << -1 << "";
+        QTest::newRow("double sharp") << "F##1" << -1 << "";
+        QTest::newRow("negative octave") << "E-1" << -1 << "";
+        QTest::newRow("spaces") << " E2" << -1 << "";
+        QTest::newRow("empty") << "" << -1 << "";
+    }
+
+    void testParse()
+    {
+        QFETCH(QString, text);
+        QFETCH(int, midi);
+        QFETCH(QString, label);
+
+        const auto note = Notes::parse(text);
+        QCOMPARE(note.has_value(), midi >= 0);
+        if (note) {
+            QCOMPARE(note->midi, midi);
+            QCOMPARE(note->label, label);
+        }
+    }
 };
 
 QTEST_GUILESS_MAIN(NotesTest)

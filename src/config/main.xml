@@ -10,17 +10,13 @@
       <label>Audio input device id. Empty for the system default.</label>
       <default></default>
     </entry>
-    <entry name="instrument" type="Int">
-      <label>Selected instrument: 0 guitar, 1 bass.</label>
-      <default>0</default>
+    <entry name="instrument" type="String">
+      <label>Name of the selected instrument in the instruments file.</label>
+      <default></default>
     </entry>
-    <entry name="stringCount" type="Int">
-      <label>Number of strings of the selected instrument.</label>
-      <default>6</default>
-    </entry>
-    <entry name="tuning" type="Int">
-      <label>Index of the selected tuning preset.</label>
-      <default>0</default>
+    <entry name="tuning" type="String">
+      <label>Name of the selected tuning of that instrument.</label>
+      <default></default>
     </entry>
     <entry name="referencePitch" type="Double">
       <label>Frequency of A4 in Hz.</label>

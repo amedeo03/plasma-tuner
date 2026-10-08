@@ -2,6 +2,8 @@
 
 #include <QString>
 
+#include <optional>
+
 // Equal-temperament helpers. Notes are identified by MIDI number (A4 = 69).
 namespace Notes
 {
@@ -15,4 +17,18 @@ QString name(int midi);
 int octave(int midi);
 // Name and octave, e.g. "E2".
 QString fullName(int midi);
+
+// Lowest and highest notes accepted by parse(): C0 and C8.
+constexpr int lowestNote = 12;
+constexpr int highestNote = 108;
+
+struct ParsedNote {
+    int midi;
+    // Display form, keeping the user's spelling: "Bb1" becomes "B♭1".
+    QString label;
+};
+
+// Parses a letter A-G, an optional "#" or "b" and an octave, e.g. "E2", "F#1"
+// or "Bb0". Returns nothing for malformed notes or notes outside C0-C8.
+std::optional<ParsedNote> parse(const QString &text);
 }

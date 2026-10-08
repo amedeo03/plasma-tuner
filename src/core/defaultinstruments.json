@@ -1,0 +1,160 @@
+{
+    "instruments": [
+        {
+            "name": "Electric guitar (6 strings)",
+            "stringCount": 6,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["E2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "Drop D",
+                    "stringNotes": ["D2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["D2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "Drop C",
+                    "stringNotes": ["C2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["C2", "F2", "Bb2", "Eb3", "G3", "C4"]
+                }
+            ]
+        },
+        {
+            "name": "Electric guitar (7 strings)",
+            "stringCount": 7,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["B1", "E2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "Drop A",
+                    "stringNotes": ["A1", "E2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["A1", "D2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "Drop G",
+                    "stringNotes": ["G1", "D2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["G1", "C2", "F2", "Bb2", "Eb3", "G3", "C4"]
+                }
+            ]
+        },
+        {
+            "name": "Electric guitar (8 strings)",
+            "stringCount": 8,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["F#1", "B1", "E2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "Drop E",
+                    "stringNotes": ["E1", "B1", "E2", "A2", "D3", "G3", "B3", "E4"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["E1", "A1", "D2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "Drop D",
+                    "stringNotes": ["D1", "A1", "D2", "G2", "C3", "F3", "A3", "D4"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["D1", "G1", "C2", "F2", "Bb2", "Eb3", "G3", "C4"]
+                }
+            ]
+        },
+        {
+            "name": "Electric bass (4 strings)",
+            "stringCount": 4,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["E1", "A1", "D2", "G2"]
+                },
+                {
+                    "name": "Drop D",
+                    "stringNotes": ["D1", "A1", "D2", "G2"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["D1", "G1", "C2", "F2"]
+                },
+                {
+                    "name": "Drop C",
+                    "stringNotes": ["C1", "G1", "C2", "F2"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["C1", "F1", "Bb1", "Eb2"]
+                }
+            ]
+        },
+        {
+            "name": "Electric bass (5 strings)",
+            "stringCount": 5,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["B0", "E1", "A1", "D2", "G2"]
+                },
+                {
+                    "name": "Drop A",
+                    "stringNotes": ["A0", "E1", "A1", "D2", "G2"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["A0", "D1", "G1", "C2", "F2"]
+                },
+                {
+                    "name": "Drop G",
+                    "stringNotes": ["G0", "D1", "G1", "C2", "F2"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["G0", "C1", "F1", "Bb1", "Eb2"]
+                }
+            ]
+        },
+        {
+            "name": "Electric bass (6 strings)",
+            "stringCount": 6,
+            "tunings": [
+                {
+                    "name": "E standard",
+                    "stringNotes": ["B0", "E1", "A1", "D2", "G2", "C3"]
+                },
+                {
+                    "name": "Drop A",
+                    "stringNotes": ["A0", "E1", "A1", "D2", "G2", "C3"]
+                },
+                {
+                    "name": "D standard",
+                    "stringNotes": ["A0", "D1", "G1", "C2", "F2", "Bb2"]
+                },
+                {
+                    "name": "Drop G",
+                    "stringNotes": ["G0", "D1", "G1", "C2", "F2", "Bb2"]
+                },
+                {
+                    "name": "C standard",
+                    "stringNotes": ["G0", "C1", "F1", "Bb1", "Eb2", "Ab2"]
+                }
+            ]
+        }
+    ]
+}

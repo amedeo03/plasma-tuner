@@ -11,18 +11,57 @@ ColumnLayout {
 
     required property PlasmoidItem plasmoidItem
 
-    // The configuration may hold values that are invalid for the current
-    // instrument (e.g. 4 strings after switching to guitar): sanitize them.
-    readonly property int instrument: Plasmoid.configuration.instrument === 1 ? 1 : 0
-    readonly property var stringCounts: TuningCatalog.stringCounts(instrument)
-    readonly property int stringCount: stringCounts.includes(Plasmoid.configuration.stringCount) ? Plasmoid.configuration.stringCount : stringCounts[0]
-    readonly property var tunings: TuningCatalog.tunings(instrument, stringCount)
-    readonly property int tuningIndex: Math.max(0, Math.min(tunings.length - 1, Plasmoid.configuration.tuning))
-    readonly property var tuningNotes: tunings.length > 0 ? tunings[tuningIndex].notes : []
+    // Selections are saved by name. A name missing from the instruments file
+    // (renamed or deleted entry) falls back to the first valid entry.
+    readonly property var instruments: InstrumentCatalog.instruments
+    readonly property int instrumentIndex: indexOfName(instruments, Plasmoid.configuration.instrument)
+    readonly property var instrument: instruments[instrumentIndex] ?? null
+    readonly property var tunings: instrument?.valid ? instrument.tunings : []
+    readonly property int tuningIndex: indexOfName(tunings, Plasmoid.configuration.tuning)
+    readonly property var tuning: tunings[tuningIndex] ?? null
+    readonly property var tuningNotes: tuning?.valid ? tuning.notes : []
+    // Problem with the selected instrument or tuning, shown in place of the target notes.
+    readonly property string selectionError: {
+        if (instrument && !instrument.valid) {
+            return instrument.error;
+        }
+        if (tuning && !tuning.valid) {
+            return tuning.error;
+        }
+        return "";
+    }
 
     // Only listen while the tuner is on screen: an open popup, or the full
     // representation shown inline on the desktop.
     readonly property bool shown: plasmoidItem.expanded || (visible && Window.window !== null && Window.window.visible && !(plasmoidItem.compactRepresentationItem?.visible ?? false))
+
+    function indexOfName(entries, name) {
+        const index = entries.findIndex(entry => entry.name === name);
+        if (index >= 0) {
+            return index;
+        }
+        return Math.max(0, entries.findIndex(entry => entry.valid));
+    }
+
+    function editInstruments() {
+        Qt.openUrlExternally(InstrumentCatalog.fileUrl);
+    }
+
+    // Instrument or tuning list with a warning icon on invalid entries.
+    component EntryComboBox: PC3.ComboBox {
+        id: comboBox
+
+        textRole: "name"
+        delegate: PC3.ItemDelegate {
+            required property var modelData
+            required property int index
+
+            width: ListView.view.width
+            text: modelData.name
+            icon.name: modelData.valid ? "" : "dialog-warning"
+            highlighted: comboBox.highlightedIndex === index
+        }
+    }
 
     Layout.minimumWidth: Kirigami.Units.gridUnit * 18
     Layout.preferredWidth: Kirigami.Units.gridUnit * 22
@@ -35,6 +74,18 @@ ColumnLayout {
         active: full.shown
         deviceId: Plasmoid.configuration.inputDevice
         referencePitch: Plasmoid.configuration.referencePitch
+    }
+
+    Kirigami.InlineMessage {
+        Layout.fillWidth: true
+        visible: InstrumentCatalog.fileError.length > 0
+        type: Kirigami.MessageType.Error
+        text: InstrumentCatalog.fileError
+        actions: Kirigami.Action {
+            text: i18nc("@action:button", "Edit Instruments…")
+            icon.name: "document-edit"
+            onTriggered: full.editInstruments()
+        }
     }
 
     TunerGauge {
@@ -92,9 +143,29 @@ ColumnLayout {
         }
     }
 
+    RowLayout {
+        Layout.fillWidth: true
+        visible: full.selectionError.length > 0
+        spacing: Kirigami.Units.smallSpacing
+
+        Kirigami.Icon {
+            Layout.alignment: Qt.AlignTop
+            implicitWidth: Kirigami.Units.iconSizes.smallMedium
+            implicitHeight: Kirigami.Units.iconSizes.smallMedium
+            source: "dialog-warning"
+        }
+        PC3.Label {
+            Layout.fillWidth: true
+            text: i18nc("@info %1 is the problem", "Configuration error: %1", full.selectionError)
+            color: Kirigami.Theme.negativeTextColor
+            wrapMode: Text.Wrap
+        }
+    }
+
     // Target notes of the selected tuning, lowest string first.
     RowLayout {
         Layout.alignment: Qt.AlignHCenter
+        visible: full.selectionError.length === 0
         spacing: Kirigami.Units.smallSpacing
 
         Repeater {
@@ -118,7 +189,7 @@ ColumnLayout {
                     id: noteLabel
 
                     anchors.centerIn: parent
-                    text: stringNote.modelData.name + stringNote.modelData.octave
+                    text: stringNote.modelData.label
                     color: stringNote.current && !stringNote.inTune ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
                 }
             }
@@ -167,23 +238,18 @@ ColumnLayout {
         RowLayout {
             Layout.fillWidth: true
 
-            PC3.ComboBox {
+            EntryComboBox {
                 Layout.fillWidth: true
-                model: TuningCatalog.instruments()
-                textRole: "text"
-                valueRole: "value"
-                currentIndex: full.instrument
-                onActivated: Plasmoid.configuration.instrument = currentValue
+                model: full.instruments
+                currentIndex: full.instrumentIndex
+                onActivated: index => Plasmoid.configuration.instrument = full.instruments[index].name
             }
-            PC3.ComboBox {
-                model: full.stringCounts.map(count => ({
-                    value: count,
-                    text: i18ncp("@item:inlistbox", "%1 string", "%1 strings", count)
-                }))
-                textRole: "text"
-                valueRole: "value"
-                currentIndex: full.stringCounts.indexOf(full.stringCount)
-                onActivated: Plasmoid.configuration.stringCount = currentValue
+            PC3.ToolButton {
+                icon.name: "document-edit"
+                onClicked: full.editInstruments()
+                PC3.ToolTip.text: i18nc("@info:tooltip", "Edit instruments…")
+                PC3.ToolTip.visible: hovered
+                Accessible.name: PC3.ToolTip.text
             }
         }
 
@@ -191,12 +257,12 @@ ColumnLayout {
             Layout.alignment: Qt.AlignRight
             text: i18nc("@label:listbox", "Tuning:")
         }
-        PC3.ComboBox {
+        EntryComboBox {
             Layout.fillWidth: true
+            enabled: full.tunings.length > 0
             model: full.tunings
-            textRole: "text"
             currentIndex: full.tuningIndex
-            onActivated: Plasmoid.configuration.tuning = currentIndex
+            onActivated: index => Plasmoid.configuration.tuning = full.tunings[index].name
         }
 
         PC3.Label {

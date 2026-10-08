@@ -10,10 +10,9 @@
         "Category": "Multimedia",
         "Description": "Chromatic tuner for electric guitars and basses",
         "Icon": "music-note-16th",
-        "Id": "io.github.amedeo03.plasmatuner",
         "License": "LGPL-2.1+",
         "Name": "Tuner",
-        "Version": "0.1.0"
+        "Version": "0.2.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

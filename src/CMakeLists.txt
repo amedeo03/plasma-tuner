@@ -1,10 +1,15 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_io.github.amedeo03.plasmatuner\")
 
-# Music theory and DSP, free of QML so it can be unit tested.
+# Music theory, DSP and instruments file parsing, free of QML so it can be unit tested.
 add_library(tunercore STATIC
     core/notes.cpp
+    core/instrumentconfig.cpp
     core/pitchdetector.cpp
-    core/tunings.cpp
+)
+qt_add_resources(tunercore "tunercore_defaults"
+    PREFIX /plasmatuner
+    BASE core
+    FILES core/defaultinstruments.json
 )
 set_target_properties(tunercore PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(tunercore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -20,8 +25,8 @@ plasma_add_applet(io.github.amedeo03.plasmatuner
         qml/TunerGauge.qml
     CPP_SOURCES
         audiocapture.cpp
+        instrumentcatalog.cpp
         tuner.cpp
-        tuningcatalog.cpp
     RESOURCES
         qml/tuner-symbolic.svg
         config/main.xml
