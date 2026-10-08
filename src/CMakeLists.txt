@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2026 amedeo03 <amedeomarino03@gmail.com>
-# SPDX-License-Identifier: BSD-2-Clause
-
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_io.github.amedeo03.plasmatuner\")
 
 # Music theory and DSP, free of QML so it can be unit tested.

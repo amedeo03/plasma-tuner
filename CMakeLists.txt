@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2026 amedeo03 <amedeomarino03@gmail.com>
-# SPDX-License-Identifier: BSD-2-Clause
-
 cmake_minimum_required(VERSION 3.16)
 
 project(plasma-tuner VERSION 0.1.0)

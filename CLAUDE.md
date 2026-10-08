@@ -60,4 +60,4 @@ Other build details:
 - New `.qml`, `.cpp` and resource files must be listed in `src/CMakeLists.txt`.
 - Resources are bundled flat next to the QML, so refer to them as `Qt.resolvedUrl("./file")`.
 
-Licensing follows REUSE/SPDX: every file has SPDX headers, and the license texts live in `LICENSES/` (code is LGPL-2.1-or-later, build files are BSD-2-Clause).
+Licensing: the whole project is LGPL-2.1-or-later (`LICENSE` at the root, also declared in `src/metadata.json`). Source files carry no SPDX or copyright headers; don't add them.

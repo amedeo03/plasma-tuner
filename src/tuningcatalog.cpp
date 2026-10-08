@@ -1,6 +1,3 @@
-// SPDX-FileCopyrightText: 2026 amedeo03 <amedeomarino03@gmail.com>
-// SPDX-License-Identifier: LGPL-2.1-or-later
-
 #include "tuningcatalog.h"
 
 #include "core/notes.h"

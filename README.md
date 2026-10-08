@@ -1,8 +1,3 @@
-<!--
-    SPDX-FileCopyrightText: 2026 amedeo03 <amedeomarino03@gmail.com>
-    SPDX-License-Identifier: CC0-1.0
--->
-
 # Plasma Tuner
 
 A chromatic tuner applet for KDE Plasma 6, for electric guitars (6, 7 and 8
@@ -43,3 +38,10 @@ Install it and add it to a panel:
 sudo cmake --install build
 plasmashell --replace   # or log out and back in
 ```
+
+## License
+
+Plasma Tuner is free software: you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation, either version 2.1 of the License, or (at your option) any
+later version. See [LICENSE](LICENSE).
