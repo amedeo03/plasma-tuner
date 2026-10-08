@@ -38,10 +38,12 @@ ctest --test-dir build --output-on-failure          # all tests
 ./build/bin/pitchdetectortest testOpenStrings       # one test function (QtTest syntax)
 
 # Run without installing (preferred over installing):
-QT_PLUGIN_PATH=$PWD/build/bin plasmoidviewer -a io.github.amedeo03.plasmatuner -s 520x760
+QT_PLUGIN_PATH=$PWD/build/bin plasmoidviewer -a io.github.amedeo03.plasmatuner -s 520x800
 # Panel/popup mode:
 QT_PLUGIN_PATH=$PWD/build/bin plasmoidviewer -a io.github.amedeo03.plasmatuner -f horizontal -l bottomedge
 ```
+
+Always pass a window size (`-s 520x800`): the viewer places the applet at the window's centre, so the default 640×480 window shows only the gauge.
 
 Run the viewer with `XDG_CONFIG_HOME=/tmp/<dir>` to test instruments files without touching the user's real `~/.config/plasma-tuner/instruments.json`.
 
