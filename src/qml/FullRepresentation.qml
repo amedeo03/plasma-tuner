@@ -13,13 +13,17 @@ ColumnLayout {
 
     required property PlasmoidItem plasmoidItem
 
+    // Untyped on purpose: since Plasma 6.8 qmllint sees Plasmoid.configuration
+    // as KConfigPropertyMap and rejects its keys, which only exist at runtime.
+    readonly property var config: Plasmoid.configuration
+
     // Selections are saved by name. A name missing from the instruments file
     // (renamed or deleted entry) falls back to the first valid entry.
     readonly property var instruments: InstrumentCatalog.instruments
-    readonly property int instrumentIndex: indexOfName(instruments, Plasmoid.configuration.instrument)
+    readonly property int instrumentIndex: indexOfName(instruments, full.config.instrument)
     readonly property var instrument: instruments[instrumentIndex] ?? null
     readonly property var tunings: instrument?.valid ? instrument.tunings : []
-    readonly property int tuningIndex: indexOfName(tunings, Plasmoid.configuration.tuning)
+    readonly property int tuningIndex: indexOfName(tunings, full.config.tuning)
     readonly property var tuning: tunings[tuningIndex] ?? null
     readonly property var tuningNotes: tuning?.valid ? tuning.notes : []
     // Problem with the selected instrument or tuning, shown in place of the target notes.
@@ -74,8 +78,8 @@ ColumnLayout {
         id: tuner
 
         active: full.shown
-        deviceId: Plasmoid.configuration.inputDevice
-        referencePitch: Plasmoid.configuration.referencePitch
+        deviceId: full.config.inputDevice
+        referencePitch: full.config.referencePitch
     }
 
     Kirigami.InlineMessage {
@@ -218,7 +222,7 @@ ColumnLayout {
             textRole: "name"
             valueRole: "id"
             currentIndex: tuner.deviceIndex
-            onActivated: Plasmoid.configuration.inputDevice = currentValue
+            onActivated: full.config.inputDevice = currentValue
         }
 
         Item {
@@ -244,7 +248,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 model: full.instruments
                 currentIndex: full.instrumentIndex
-                onActivated: index => Plasmoid.configuration.instrument = full.instruments[index].name
+                onActivated: index => full.config.instrument = full.instruments[index].name
             }
             PC3.ToolButton {
                 icon.name: "document-edit"
@@ -264,7 +268,7 @@ ColumnLayout {
             enabled: full.tunings.length > 0
             model: full.tunings
             currentIndex: full.tuningIndex
-            onActivated: index => Plasmoid.configuration.tuning = full.tunings[index].name
+            onActivated: index => full.config.tuning = full.tunings[index].name
         }
 
         PC3.Label {
@@ -283,18 +287,18 @@ ColumnLayout {
                 to: 5000
                 stepSize: 1
                 editable: true
-                value: Math.round(Plasmoid.configuration.referencePitch * 10)
+                value: Math.round(full.config.referencePitch * 10)
                 textFromValue: (value, locale) => i18nc("@item:valuesuffix frequency", "%1 Hz", Number(value / 10).toLocaleString(locale, 'f', 1))
                 valueFromText: (text, locale) => Math.round(Number.fromLocaleString(locale, text.replace(/[^0-9.,]/g, "")) * 10)
                 validator: RegularExpressionValidator {
                     regularExpression: /\d{1,3}([.,]\d?)?\s*(Hz)?/
                 }
-                onValueModified: Plasmoid.configuration.referencePitch = value / 10
+                onValueModified: full.config.referencePitch = value / 10
             }
             PC3.ToolButton {
                 icon.name: "edit-undo"
                 enabled: referenceSpinBox.value !== 4400
-                onClicked: Plasmoid.configuration.referencePitch = 440
+                onClicked: full.config.referencePitch = 440
                 PC3.ToolTip.text: i18nc("@info:tooltip", "Reset to 440 Hz")
                 PC3.ToolTip.visible: hovered
                 Accessible.name: PC3.ToolTip.text
